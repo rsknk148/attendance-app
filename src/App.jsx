@@ -7,6 +7,7 @@ import Employees from './pages/Employees';
 import Attendance from './pages/Attendance';
 import History from './pages/History';
 import Settings from './pages/Settings';
+import ForgotPassword from './pages/ForgotPassword';
 
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
@@ -32,6 +33,7 @@ function App() {
       <Router>
         <Routes>
           <Route path="/login" element={<Login />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
 
           <Route path="/" element={
             <ProtectedRoute>

@@ -71,11 +71,36 @@ export const AuthProvider = ({ children }) => {
     return true;
   };
 
+  const resetPassword = (email, newPassword) => {
+    // 1. Check Admin
+    const customAdmin = JSON.parse(localStorage.getItem('admin_settings') || 'null');
+    const isAdmin = (customAdmin && customAdmin.email === email) || (!customAdmin && email === 'admin@company.com');
+
+    if (isAdmin) {
+      const currentData = customAdmin || { name: 'Administrator', email: 'admin@company.com', role: 'admin' };
+      const newSettings = { ...currentData, password: newPassword };
+      localStorage.setItem('admin_settings', JSON.stringify(newSettings));
+      return true;
+    }
+
+    // 2. Check Employees
+    const employees = JSON.parse(localStorage.getItem('employees') || '[]');
+    const empIndex = employees.findIndex(e => e.email === email);
+    if (empIndex !== -1) {
+      employees[empIndex].password = newPassword;
+      localStorage.setItem('employees', JSON.stringify(employees));
+      return true;
+    }
+
+    return false;
+  };
+
   const value = {
     user,
     login,
     logout,
     updateProfile,
+    resetPassword,
     loading
   };
 
