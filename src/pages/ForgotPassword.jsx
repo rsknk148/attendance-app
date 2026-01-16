@@ -49,14 +49,12 @@ const ForgotPassword = () => {
             setMessage({ type: 'success', text: 'Verification code sent to your email!' });
         } catch (error) {
             console.error('EmailJS Error:', error);
-            setMessage({ type: 'error', text: 'Failed to send email. Please check your EmailJS keys in the code.' });
 
-            // FALLBACK FOR DEMO if keys are missing
-            if (error.text?.includes('The public key is required') || service_id === 'YOUR_SERVICE_ID') {
-                console.log('Demo Fallback: Code is', newCode);
-                alert(`[DEMO MODE] EmailJS keys missing. Your code is: ${newCode}`);
-                setStep(1);
-            }
+            // FALLBACK FOR DEMO: Always allow testing even if keys are missing
+            // If email fails, we assume it's because keys are invalid/missing.
+            alert(`[DEMO MODE] EmailJS keys are missing or invalid.\n\nYour verification code is: ${newCode}`);
+            setStep(1);
+            setMessage({ type: 'warning', text: 'Email delivery failed. Switched to Demo Mode.' });
         } finally {
             setLoading(false);
         }
